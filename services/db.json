@@ -87,6 +87,22 @@
       "strategy": "Stay",
       "individualScore": 60,
       "groupScore": 64
+    },
+    {
+      "name": "Darth Vader",
+      "group": "1",
+      "secret": "Casita Madrigal",
+      "strategy": "Stay",
+      "individualScore": 66,
+      "groupScore": 80
+    },
+    {
+      "name": "Frank Drebin",
+      "group": "1",
+      "secret": "ZAZ",
+      "strategy": "Something Else",
+      "individualScore": 64,
+      "groupScore": 38
     }
   ]
 }

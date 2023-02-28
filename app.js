@@ -7,7 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var resultsRouter = require('./routes/results.js');
-
+var dbRouter = require('./routes/db')
 
 var app = express();
 
@@ -26,8 +26,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/results', resultsRouter);
+app.use('/db', dbRouter);
 
 global.jsondb = "";
+global.rootDir = __dirname;
 
 async function loadMyModule() {
   writeScore = await import('./services/jsondb.mjs');

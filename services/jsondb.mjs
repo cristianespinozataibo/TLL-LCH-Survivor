@@ -9,7 +9,7 @@ import * as url from 'url';
 //const __dirname=dirname(fileURLToPath(import.meta.url));
 console.log("a punto de correr el URL")
 //const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
-const __dirname = "/Users/Shared/Previously Relocated Items/Security/OneDrive/cet/Proyectos/HGSE TLL/LCH/survivor-express/services/";
+const __dirname = "./services/";
 
 console.log("ya corri el URL");
 
