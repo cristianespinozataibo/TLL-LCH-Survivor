@@ -339,28 +339,27 @@
 
 		<div class="row">
 			<div class="col-md-12 status"><span ng-show="state=='default' && last_message==''">{{calculator.messages["default"]}}</span><span ng-show="state=='step1_completed' && last_message==''">{{calculator.messages["rank_individual"]}}</span><span ng-show="state=='step2_completed' && last_message==''">{{calculator.messages["rank_team"]}}</span><span ng-show="last_message!=''">{{calculator.messages["password_revealed"]}} <a target="_blank" href='https://docs.google.com/forms/d/e/1FAIpQLSdPiKARynNMwxkizE-Fi5LrfjPg9ftQUlALuWYRHw1u8c40vQ/viewform'>here.</a></span></div>
-		</div>
-
-		<div>
-			<div>Secret Word: <input id="secretWord" type="text" ng-model="calculator.secretWord" /> </div>
-			<div>Name: <input type="text" ng-model="calculator.participantName" /></div>
-			<div>Group: <select id="group" tabindex="2" ng-model="calculator.groupName" style="width:10%;">
-				<option value="1">1</option>
-				<option value="2">2</option>
-				<option value="3">3</option>
-				<option value="4">4</option>
-				<option value="5">5</option>
-				<option value="6">6</option>
-				<option value="7">7</option>
-				<option value="8">8</option>
-				<option value="9">9</option>
-				<option value="10">10</option>			
-			</select></div>
-			<div>Strategy: <select id="strategy" tabindex="2" ng-model="calculator.strategy" style="width:10%;">
-				<option value="Stay">Stay</option>
-				<option value="Walk">Walk</option>
-				<option value="Something Else">Something Else</option>	
-			</select></div>
+			<div class="col-md-12 info">
+				Secret Word: <input id="secretWord" type="text" ng-model="calculator.secretWord" />
+				Your Name: <input type="text" ng-model="calculator.participantName" />
+				Group: <select id="group" tabindex="2" ng-model="calculator.groupName" style="width:10%;">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8">8</option>
+					<option value="9">9</option>
+					<option value="10">10</option>			
+				</select>
+				Strategy: <select id="strategy" tabindex="2" ng-model="calculator.strategy" style="width:10%;">
+					<option value="Stay">Stay</option>
+					<option value="Walk">Walk</option>
+					<option value="Something Else">Something Else</option>	
+				</select>
+			</div>
 		</div>
 
 		<div class="row header">
@@ -410,10 +409,11 @@
 				<div class="totals" ng-show="calculator.reveal_expert_rank">
 					<div class="head">Team Score</div>
 					<div class="cnt"><span ng-bind="getTotals('team_total')"></span></div>
+					<button class="cnt" ng-click="submitScores()">Submit scores</button>
 				</div>
 			</div>
 
-			<button ng-click="submitScores()">Submit scores</button>
+			
 		</div>
 
 
