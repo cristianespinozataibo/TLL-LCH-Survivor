@@ -7,11 +7,18 @@
 		text-align: center;
 	    background: #fff;
 	    font-size: 40px;
-	    padding: 120px;
-	    margin-bottom: 100px;
+	    padding: 30px;
+	    margin-bottom: 30px;
 	    font-weight: 500;
 	    color: #000;
 	}
+	
+	.info
+	{
+		text-align: center;
+		padding-bottom: 50px;
+	}
+
 	body
 	{
 		padding:50px;
