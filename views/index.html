@@ -311,6 +311,7 @@
 			$http.post('/results', 
 			{
 				params:{
+					role: $scope.calculator.role,
 					name: $scope.calculator.participantName,
 					group: $scope.calculator.groupName,
 					secret: $scope.calculator.secretWord,
@@ -340,6 +341,10 @@
 		<div class="row">
 			<div class="col-md-12 status"><span ng-show="state=='default' && last_message==''">{{calculator.messages["default"]}}</span><span ng-show="state=='step1_completed' && last_message==''">{{calculator.messages["rank_individual"]}}</span><span ng-show="state=='step2_completed' && last_message==''">{{calculator.messages["rank_team"]}}</span><span ng-show="last_message!=''">{{calculator.messages["password_revealed"]}}</span></div>
 			<div class="col-md-12 info">
+				Your role: <select id="role" tabindex="2" ng-model="calculator.role" style="width:10%;">
+					<option value="participant">Participant</option>
+					<option value="observer">Observer</option>
+					</select>
 				Secret Word: <input id="secretWord" type="text" ng-model="calculator.secretWord" />
 				Your Name: <input type="text" ng-model="calculator.participantName" />
 				Group: <select id="group" tabindex="2" ng-model="calculator.groupName" style="width:10%;">
