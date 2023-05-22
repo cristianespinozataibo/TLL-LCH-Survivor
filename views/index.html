@@ -319,10 +319,9 @@
 					individualScore: $scope.getTotals('my_total'),
 					groupScore: $scope.getTotals('team_total')
 				}
-			}).subscribe(response => {
-				console.log(response);
-				this.newPost = response
 			});
+
+			alert("Scores submitted, thanks!");
 		}
 	});
 
@@ -341,13 +340,13 @@
 		<div class="row">
 			<div class="col-md-12 status"><span ng-show="state=='default' && last_message==''">{{calculator.messages["default"]}}</span><span ng-show="state=='step1_completed' && last_message==''">{{calculator.messages["rank_individual"]}}</span><span ng-show="state=='step2_completed' && last_message==''">{{calculator.messages["rank_team"]}}</span><span ng-show="last_message!=''">{{calculator.messages["password_revealed"]}}</span></div>
 			<div class="col-md-12 info">
-				Your role: <select id="role" tabindex="2" ng-model="calculator.role" style="width:10%;">
+				Your role: <select id="role" tabindex="1" ng-model="calculator.role" style="width:10%;">
 					<option value="participant">Participant</option>
 					<option value="observer">Observer</option>
 					</select>
-				Secret Word: <input id="secretWord" type="text" ng-model="calculator.secretWord" />
-				Your Name: <input type="text" ng-model="calculator.participantName" />
-				Group: <select id="group" tabindex="2" ng-model="calculator.groupName" style="width:10%;">
+				Secret Word: <input id="secretWord" type="text" ng-model="calculator.secretWord" tabindex="2"/>
+				Your Name: <input type="text" ng-model="calculator.participantName" tabindex="3" />
+				Group: <select id="group" tabindex="4" ng-model="calculator.groupName" style="width:10%;">
 					<option value="1">1</option>
 					<option value="2">2</option>
 					<option value="3">3</option>
@@ -359,7 +358,7 @@
 					<option value="9">9</option>
 					<option value="10">10</option>			
 				</select>
-				Strategy: <select id="strategy" tabindex="2" ng-model="calculator.strategy" style="width:10%;">
+				Strategy: <select id="strategy" tabindex="5" ng-model="calculator.strategy" style="width:10%;">
 					<option value="Stay">Stay</option>
 					<option value="Walk">Walk</option>
 					<option value="Something Else">Something Else</option>	
@@ -382,7 +381,7 @@
 			<div class="col-md-2"><label for="dd{{$index}}">{{item.label}}</label></div>
 
 			<div class="col-md-2" ng-class="{filled:checkIfColumnFilled('rank_individual')}">
-				<select id="dd{{$index}}" tabindex="{{$index}}" ng-model="calculator.items[name].rank_individual" ng-options="item as item for item in getRanks('rank_individual',calculator.items[name])" ng-class="{w90:true}"></select><span ng-click="calculator.items[name].rank_individual=-1" ng-show="calculator.items[name].rank_individual>0" class="clear_box">X</span></div>
+				<select id="dd{{$index}}" tabindex="{{$index+10}}" ng-model="calculator.items[name].rank_individual" ng-options="item as item for item in getRanks('rank_individual',calculator.items[name])" ng-class="{w90:true}"></select><span ng-click="calculator.items[name].rank_individual=-1" ng-show="calculator.items[name].rank_individual>0" class="clear_box">X</span></div>
 
 			<div class="col-md-2"><select tabindex="{{$index+getItemsCount()}}" ng-disabled="!checkIfColumnFilled('rank_individual')" ng-model="calculator.items[name].rank_team" ng-options="item as item for item in getRanks('rank_team',calculator.items[name])" ng-class="{w90:true}"></select><span ng-click="calculator.items[name].rank_team=-1" ng-show="calculator.items[name].rank_team>0" class="clear_box">X</span></div>
 
@@ -411,10 +410,11 @@
 			</div>
 
 			<div class="col-md-2 center bold">
-				<div class="totals" ng-show="calculator.reveal_expert_rank">
-					<div class="head">Team Score</div>
+				<div class="totals">
+					<div class="totals" ng-show="calculator.reveal_expert_rank">
+					<!-- <div class="head">Team Score</div> -->
 					<div class="cnt"><span ng-bind="getTotals('team_total')"></span></div>
-					<button class="cnt" ng-click="submitScores()">Submit scores</button>
+					<button class="cnt" ng-click="submitScores()" style="font-size:20px">Submit scores</button>
 				</div>
 			</div>
 
