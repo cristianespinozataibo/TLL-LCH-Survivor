@@ -116,3 +116,18 @@
     	font-weight: bold;
     	color: #000;
 	}
+
+	.observer
+	{
+		background-color: lightcoral;
+	}
+
+	.participant
+	{
+		background-color: white;
+	}
+
+	.ready
+	{
+		background-color: lightgreen;
+	}
