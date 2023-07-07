@@ -435,21 +435,22 @@
 					<div class="col-md-3"><label for="dd{{$index}}">{{item.label}}</label></div>
 
 					<!--Individual ranking-->
-					<div class="col-md-2" ng-class="{filled:checkIfColumnFilled()}"
-						ng-show="calculator.role=='participant'">
+					<div class="col-md-2" ng-show="calculator.role=='participant'">
 						<select id="dd{{$index}}" tabindex="{{$index+10}}"
 							ng-model="calculator.items[name].rank_individual"
 							ng-options="item as item for item in getRanks('rank_individual',calculator.items[name])"
-							ng-class="{w90:true}"></select><span ng-click="calculator.items[name].rank_individual=-1"
+							ng-class="{w90:true}" ng-disabled="calculator.next_button_clicked"></select>
+						<span ng-click="calculator.items[name].rank_individual=-1"
 							ng-show="calculator.items[name].rank_individual>0 && !calculator.reveal_expert_rank && !calculator.next_button_clicked" class="clear_box">X</span>
 					</div>
 
 					<!--Group ranking-->
-					<div class="col-md-2" ng-show="(calculator.role=='participant' && calculator.next_button_clicked) || calculator.role=='observer'"><select
+					<div class="col-md-2" ng-show="(calculator.role=='participant' && calculator.next_button_clicked) || calculator.role=='observer'">
+						<select
 							tabindex="{{$index+getItemsCount()}}" ng-model="calculator.items[name].rank_team"
 							ng-options="item as item for item in getRanks('rank_team',calculator.items[name])"
 							ng-class="{w90:true}"  ng-disabled="calculator.reveal_expert_rank || (calculator.role=='observer' && calculator.next_button_clicked)"></select>
-							<span ng-click="calculator.items[name].rank_team=-1"
+						<span ng-click="calculator.items[name].rank_team=-1"
 							ng-show="calculator.items[name].rank_team>0 && !calculator.reveal_expert_rank && ((calculator.role=='observer' && !calculator.next_button_clicked) || (calculator.role=='participant' && calculator.next_button_clicked))" class="clear_box">X</span>
 						</div>
 
