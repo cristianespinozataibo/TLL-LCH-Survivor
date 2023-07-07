@@ -18,8 +18,8 @@
 
 			"messages":
 			{
-				"rank_done": "Great Job. Wait to receive a password to reveal the expert's answers.",
-				"rank_individual": "Good. Now fill out the second column as a team.",
+				"rank_done": "Great Job. Discuss with your group and wait to receive a password to reveal the expert's answers.",
+				"rank_team": "Great Job. Wait to receive a password to reveal the expert's answers.",
 				"password_revealed_participant": "Check your score and then click on Submit Scores ",
 				"password_revealed_observer": "Check your team's score and then click on Submit Scores ",
 				"default_participant": "Fill out the first column individually.",
@@ -28,6 +28,7 @@
 			},
 			"expert_rank_password": "contexto",
 			"reveal_expert_rank": false,
+			"next_button_clicked": false,
 
 			"items":
 			{
@@ -156,6 +157,14 @@
 
 		$scope.state = "default";
 
+		$scope.resetLists = function (){
+			for (var i in $scope.calculator.items) {
+				var item = $scope.calculator.items[i];
+				item["rank_individual"] = 0;
+				item["rank_team"] = 0;
+			}
+		}
+
 		$scope.checkIfColumnFilled = function () {
 			var filled = 0;
 			var cnt = 0;
@@ -176,7 +185,7 @@
 
 			if (column == "rank_individual") {
 				if (filled == cnt) {
-					$scope.state = "step1_completed";
+					//$scope.state = "step1_completed";
 					return true;
 				}
 				else {
@@ -188,7 +197,7 @@
 			}
 			else if (column == "rank_team") {
 				if (filled == cnt) {
-					$scope.state = "step2_completed";
+					//$scope.state = "step2_completed";
 					return true;
 				}
 				else {
@@ -289,6 +298,11 @@
 		$scope.submitScores = function () {
 			console.log("anda la osa");
 
+			if ($scope.calculator.role=="observer")
+				groupValue = $scope.getTotals('team_total');
+			else
+				groupValue = 0;
+
 			$http.post('/results',
 				{
 					params: {
@@ -298,18 +312,30 @@
 						secret: $scope.calculator.secretWord,
 						strategy: $scope.calculator.strategy,
 						individualScore: $scope.getTotals('my_total'),
-						groupScore: $scope.getTotals('team_total')
+						groupScore: groupValue
 					}
 				});
 
 			document.body.className = "ready";
 			$scope.calculator.submitted = true;
-			alert("Scores submitted, thanks!");
-
 		}
 
 		$scope.changeRole = function () {
 			document.body.className = $scope.calculator.role;
+			$scope.state = "default";
+			$scope.last_message="";
+			$scope.calculator.next_button_clicked = false;
+			$scope.calculator.reveal_expert_rank = false;
+			$scope.calculator.submitted = false;
+			$scope.resetLists();
+		}
+
+		$scope.nextPressed = function() {
+			$scope.calculator.next_button_clicked = true;
+			if ($scope.calculator.role == "observer")
+				$scope.state = "step2_completed";
+			else
+				$scope.state = "step1_completed";
 		}
 
 	});
@@ -330,7 +356,7 @@
 			<div class="col-md-12 status"><span
 					ng-show="state=='default' && last_message==''">{{calculator.messages["default_" + calculator.role]}}</span><span
 					ng-show="state=='step1_completed' && last_message==''">{{calculator.messages["rank_done"]}}</span><span
-					ng-show="state=='step2_completed' && last_message==''">{{calculator.messages["rank_done"]}}</span><span
+					ng-show="state=='step2_completed' && last_message==''">{{calculator.messages["rank_team"]}}</span><span
 					ng-show="last_message!='' && !calculator.submitted">{{calculator.messages["password_revealed_" + calculator.role]}}</span>
 					<span ng-show="calculator.submitted">{{calculator.messages["allset"]}}</span>
 				</div>
@@ -394,9 +420,9 @@
 				<div class="row header">
 					<div class="col-md-3 aleft">Items to pack</div>
 					<div class="col-md-2" ng-show="calculator.role=='participant'">Rank Individually</div>
-					<div class="col-md-2" ng-show="calculator.role=='observer'">Rank as a Team</div>
+					<div class="col-md-2" ng-show="true">Rank as a Team</div>
 					<div class="col-md-2">Expert Rankings</div>
-					<div class="col-md-2" ng-show="calculator.role=='participant'">Your Difference</div>
+					<div class="col-md-2" ng-show="calculator.role=='participant'">Individual Difference</div>
 					<div class="col-md-2" ng-show="calculator.role=='observer'">Team Difference</div>
 				</div>
 
@@ -415,20 +441,22 @@
 							ng-model="calculator.items[name].rank_individual"
 							ng-options="item as item for item in getRanks('rank_individual',calculator.items[name])"
 							ng-class="{w90:true}"></select><span ng-click="calculator.items[name].rank_individual=-1"
-							ng-show="calculator.items[name].rank_individual>0" class="clear_box">X</span>
+							ng-show="calculator.items[name].rank_individual>0 && !calculator.reveal_expert_rank && !calculator.next_button_clicked" class="clear_box">X</span>
 					</div>
 
 					<!--Group ranking-->
-					<div class="col-md-2" ng-show="calculator.role=='observer'"><select
+					<div class="col-md-2" ng-show="(calculator.role=='participant' && calculator.next_button_clicked) || calculator.role=='observer'"><select
 							tabindex="{{$index+getItemsCount()}}" ng-model="calculator.items[name].rank_team"
 							ng-options="item as item for item in getRanks('rank_team',calculator.items[name])"
-							ng-class="{w90:true}"></select><span ng-click="calculator.items[name].rank_team=-1"
-							ng-show="calculator.items[name].rank_team>0" class="clear_box">X</span></div>
+							ng-class="{w90:true}"  ng-disabled="calculator.reveal_expert_rank || (calculator.role=='observer' && calculator.next_button_clicked)"></select>
+							<span ng-click="calculator.items[name].rank_team=-1"
+							ng-show="calculator.items[name].rank_team>0 && !calculator.reveal_expert_rank && ((calculator.role=='observer' && !calculator.next_button_clicked) || (calculator.role=='participant' && calculator.next_button_clicked))" class="clear_box">X</span>
+						</div>
 
 					<!--Expert ranking and reveal button-->
-					<div class="col-md-2 center bold"><span ng-click="reveal()"
-							ng-show="checkIfColumnFilled() && !calculator.reveal_expert_rank && $index==0"
-							class="btn_reveal">Reveal</span><span
+					<div class="col-md-2 center bold"><button ng-click="reveal()"
+							ng-show="checkIfColumnFilled() && !calculator.reveal_expert_rank && $index==0 && calculator.next_button_clicked"
+							class="btn_reveal">Reveal</button><span
 							ng-show="calculator.reveal_expert_rank">{{calculator.items[name].rank_expert}}</span></div>
 
 					<!--Individual difference-->
@@ -443,6 +471,12 @@
 							ng-bind="abs(calculator.items[name].rank_team - calculator.items[name].rank_expert,'team_total')"></span>
 					</div>
 
+				</div>
+				<div class="row">
+					<div class="col-md-3"></div>
+					<div class="col-md-2">
+						<button ng-show="!calculator.next_button_clicked" ng-disabled="!checkIfColumnFilled()" ng-click="nextPressed()">Next >></button>
+					</div>
 				</div>
 
 				
