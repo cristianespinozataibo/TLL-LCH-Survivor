@@ -295,39 +295,79 @@
 
 		$scope.status = "Fill in the first column individually.";
 
-		$scope.submitScores = function () {
+		$scope.submitScores = function () {			
 			console.log("anda la osa");
+
+			errorMessage="";
+			
+			if ($scope.calculator.secretWord=="")
+				errorMessage += ", the secret word";
+
+			if ($scope.calculator.participantName=="")
+				errorMessage += ", your name";
+
+			if ($scope.calculator.groupName=="")
+				errorMessage += ", your group's number";
+
+			if ($scope.calculator.role=="observer" && $scope.calculator.strategy=="")
+				errorMessage += ", your group's strategy";
 
 			if ($scope.calculator.role=="observer")
 				groupValue = $scope.getTotals('team_total');
 			else
 				groupValue = 0;
 
-			$http.post('/results',
-				{
-					params: {
-						role: $scope.calculator.role,
-						name: $scope.calculator.participantName,
-						group: $scope.calculator.groupName,
-						secret: $scope.calculator.secretWord,
-						strategy: $scope.calculator.strategy,
-						individualScore: $scope.getTotals('my_total'),
-						groupScore: groupValue
-					}
-				});
+			if ($scope.calculator.role=="observer")
+				theStrategy=$scope.calculator.strategy
+			else
+				theStrategy=""
 
-			document.body.className = "ready";
-			$scope.calculator.submitted = true;
+			if (errorMessage!=""){
+				//We remove the first ", "
+				errorMessage = errorMessage.slice(errorMessage.indexOf(",")+2, errorMessage.length);
+				
+				if(errorMessage.lastIndexOf(",")>-1)
+					//We add an "and" at the end in case there's more than one field missing
+					errorMessage = errorMessage.slice(0, errorMessage.lastIndexOf(",")) + ", and " + errorMessage.slice(errorMessage.lastIndexOf(",")+2, errorMessage.length);
+			
+				errorMessage += ".";
+				alert("Some data are missing. Please enter " + errorMessage);
+			}
+			else{
+				$http.post('/results',
+					{
+						params: {
+							role: $scope.calculator.role,
+							name: $scope.calculator.participantName,
+							group: $scope.calculator.groupName,
+							secret: $scope.calculator.secretWord,
+							strategy: theStrategy,
+							individualScore: $scope.getTotals('my_total'),
+							groupScore: groupValue
+						}
+					});
+
+				document.body.className = "ready";
+				$scope.calculator.submitted = true;
+			}
 		}
 
 		$scope.changeRole = function () {
-			document.body.className = $scope.calculator.role;
-			$scope.state = "default";
-			$scope.last_message="";
-			$scope.calculator.next_button_clicked = false;
-			$scope.calculator.reveal_expert_rank = false;
-			$scope.calculator.submitted = false;
-			$scope.resetLists();
+			if (confirm("Are you sure you want to switch roles? The rankings you've entered will be lost.")){
+				document.body.className = $scope.calculator.role;
+				$scope.state = "default";
+				$scope.last_message="";
+				$scope.calculator.next_button_clicked = false;
+				$scope.calculator.reveal_expert_rank = false;
+				$scope.calculator.submitted = false;
+				$scope.resetLists();
+			}
+			else {
+				if ($scope.calculator.role=="participant")
+					$scope.calculator.role="observer"
+				else			
+					$scope.calculator.role="participant"
+			}
 		}
 
 		$scope.nextPressed = function() {
